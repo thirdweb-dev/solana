@@ -1,8 +1,17 @@
 import { NFTCollectionMetadataInput } from "../types/contracts";
 import { IStorage } from "./storage/IStorage";
 import { UserWallet } from "./user-wallet";
-import { createNftBuilder, Metaplex } from "@metaplex-foundation/js";
+import {
+  createNftBuilder,
+  Metaplex,
+  verifyNftCollectionBuilder,
+} from "@metaplex-foundation/js";
+import {
+  createVerifyCollectionInstruction,
+  verifyCollectionInstructionDiscriminator,
+} from "@metaplex-foundation/mpl-token-metadata";
 import { Connection } from "@solana/web3.js";
+import invariant from "tiny-invariant";
 
 export class Deployer {
   private connection: Connection;
@@ -14,13 +23,13 @@ export class Deployer {
     this.connection = connection;
     this.wallet = wallet;
     this.storage = storage;
-    console.log("rpcEndpoint", this.connection);
     this.metaplex = Metaplex.make(this.connection);
   }
 
   async createNftCollection(
     collectionMetadata: NFTCollectionMetadataInput
   ): Promise<string> {
+    invariant(this.wallet.signer, "Wallet is not connected");
     const metaplex = this.wallet.connectToMetaplex(this.metaplex);
     const uri = await this.storage.uploadMetadata(collectionMetadata);
     const createCollectionInstruction = await createNftBuilder(metaplex, {
@@ -32,6 +41,17 @@ export class Deployer {
     const collResult = await createCollectionInstruction.sendAndConfirm(
       metaplex
     );
+    // TODO verify collection transaction
+    // createVerifyCollectionInstruction({
+    //   collectionAuthority: this.wallet.signer?.publicKey,
+    //   collection: collResult.nft.mint.address,
+    //   collectionMasterEditionAccount: collResult.masterEditionAddress,
+    //   collectionMint: collResult.mintAddress,
+    //   payer: this.wallet.signer?.publicKey,
+    // });
+    // verifyNftCollectionBuilder(metaplex, {
+    //   collectionMintAddress: collResult.mint.address,
+    // });
     return collResult.mintAddress.toBase58();
   }
 }

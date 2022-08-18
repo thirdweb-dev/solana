@@ -24,6 +24,7 @@ import FormData from "form-data";
  * @remarks By default, thirdweb automatically uploads files to IPFS when you perform operations such as minting, this class allows you to do it manually.
  * @public
  */
+// TODO extract into its own package
 export class IpfsStorage implements IStorage {
   /**
    * {@inheritdoc IStorage.gatewayUrl}
@@ -80,7 +81,7 @@ export class IpfsStorage implements IStorage {
       options
     );
 
-    const baseUri = `ipfs://${cid}/`;
+    const baseUri = `${this.gatewayUrl}${cid}/`;
     return `${baseUri}${fileNames[0]}`;
   }
 
@@ -104,7 +105,7 @@ export class IpfsStorage implements IStorage {
       options
     );
 
-    const baseUri = `ipfs://${cid}/`;
+    const baseUri = `${this.gatewayUrl}${cid}/`;
     const uris = fileNames.map((filename) => `${baseUri}${filename}`);
     return {
       baseUri,
@@ -174,7 +175,7 @@ export class IpfsStorage implements IStorage {
       signerAddress
     );
 
-    const baseUri = `ipfs://${cid}/`;
+    const baseUri = `${this.gatewayUrl}${cid}/`;
     const uris = fileNames.map((filename) => `${baseUri}${filename}`);
 
     return {
