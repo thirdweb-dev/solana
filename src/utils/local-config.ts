@@ -1,25 +1,28 @@
 import { Keypair } from "@solana/web3.js";
-import fs from "fs";
-import os from "os";
-import path from "path";
-import yaml from "yaml";
+
+// TODO only export this in node
+// import fs from "fs";
+// import os from "os";
+// import path from "path";
+// import yaml from "yaml";
 
 /**
  * @internal
  */
 async function getConfig(): Promise<any> {
   // Path to Solana CLI config file
-  const CONFIG_FILE_PATH = path.resolve(
-    os.homedir(),
-    ".config",
-    "solana",
-    "cli",
-    "config.yml"
-  );
-  const configYml = fs.readFileSync(CONFIG_FILE_PATH, {
-    encoding: "utf8",
-  });
-  return yaml.parse(configYml);
+  // const CONFIG_FILE_PATH = path.resolve(
+  //   os.homedir(),
+  //   ".config",
+  //   "solana",
+  //   "cli",
+  //   "config.yml"
+  // );
+  // const configYml = fs.readFileSync(CONFIG_FILE_PATH, {
+  //   encoding: "utf8",
+  // });
+  // return yaml.parse(configYml);
+  return {};
 }
 
 /**
