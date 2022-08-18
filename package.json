@@ -10,8 +10,15 @@
     "build": "preconstruct build"
   },
   "files": [
-    "dist/**/*"
+    "dist/",
+    "server/"
   ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "server/index.ts"
+    ]
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-typescript": "^7.18.6",

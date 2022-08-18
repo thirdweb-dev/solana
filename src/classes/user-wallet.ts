@@ -19,15 +19,6 @@ export class UserWallet {
     this.connection = connection;
   }
 
-  //   public async connectFromLocalConfig() {
-  //     const payer = await getPayer();
-  //     const signer: KeypairSigner = {
-  //       publicKey: payer.publicKey,
-  //       secretKey: payer.secretKey,
-  //     };
-  //     this.signer = signer;
-  //   }
-
   public async connect(wallet: Signer) {
     this.signer = wallet;
     // TODO event dispatcher

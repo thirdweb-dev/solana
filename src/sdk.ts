@@ -7,11 +7,6 @@ import { Network } from "./types";
 import { clusterApiUrl, Connection } from "@solana/web3.js";
 
 export class ThirdwebSDK {
-  //   static fromLocalConfig(network: Network): ThirdwebSDK {
-  //     const sdk = new ThirdwebSDK(new Connection(network));
-  //     sdk.wallet.connectFromLocalConfig();
-  //     return sdk;
-  //   }
   static fromNetwork(network: Network): ThirdwebSDK {
     const sdk = new ThirdwebSDK(new Connection(clusterApiUrl(network)));
     return sdk;
