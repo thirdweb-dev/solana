@@ -1,5 +1,6 @@
 /node_modules
 /dist
+/server
 /.yalc
 yalc.lock
 yarn-error.log
