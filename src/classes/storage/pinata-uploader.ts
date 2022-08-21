@@ -1,7 +1,10 @@
-import { TW_IPFS_SERVER_URL, PINATA_IPFS_URL } from "../../constants/urls";
+import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../constants/urls";
 import { FileOrBuffer } from "../../types/common";
-import { IStorageUpload, CidWithFileName } from "./IStorageUpload";
-import { UploadProgressEvent } from "./storage";
+import {
+  CidWithFileName,
+  IStorageUpload,
+  UploadProgressEvent,
+} from "./IStorageUpload";
 
 /**
  * @internal
@@ -24,8 +27,7 @@ export class PinataUploader implements IStorageUpload {
     if (!res.ok) {
       throw new Error(`Failed to get upload token`);
     }
-    const body = await res.text();
-    return body;
+    return await res.text();
   }
 
   public async uploadBatchWithCid(

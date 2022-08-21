@@ -1,37 +1,35 @@
 // import { getPayer } from "../utils/local-config";
-import {
-  Signer,
-  KeypairSigner,
-  Metaplex,
-  isKeypairSigner,
-  keypairIdentity,
-  isIdentitySigner,
-  walletAdapterIdentity,
-} from "@metaplex-foundation/js";
-import { Connection, Keypair } from "@solana/web3.js";
-import invariant from "tiny-invariant";
+import { Signer } from "@metaplex-foundation/js";
+import EventEmitter from "eventemitter3";
+
+/**
+ *
+ * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
+ *
+ * @public
+ */
+export interface UserWalletEvents {
+  /**
+   * Emitted when `sdk.wallet.connect()` is called.
+   */
+  connected: [Signer];
+  /**
+   * Emitted when `sdk.wallet.disconnect()` is called.
+   */
+  disconnected: void;
+}
 
 export class UserWallet {
   public signer: Signer | undefined;
-  private connection: Connection;
+  public events = new EventEmitter<UserWalletEvents>();
 
-  constructor(connection: Connection) {
-    this.connection = connection;
-  }
-
-  public async connect(wallet: Signer) {
+  public connect(wallet: Signer) {
     this.signer = wallet;
-    // TODO event dispatcher
+    this.events.emit("connected", wallet);
   }
 
-  public connectToMetaplex(metaplex: Metaplex) {
-    invariant(this.signer, "Wallet is not connected");
-    const plugin = isKeypairSigner(this.signer)
-      ? keypairIdentity(Keypair.fromSecretKey(this.signer.secretKey))
-      : isIdentitySigner(this.signer)
-      ? walletAdapterIdentity(this.signer)
-      : undefined;
-    invariant(plugin, "Wallet is not compatible with Metaplex");
-    return metaplex.use(plugin);
+  public disconnect() {
+    this.signer = undefined;
+    this.events.emit("disconnected");
   }
 }

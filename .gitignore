@@ -2,6 +2,7 @@
 /dist
 /server
 /.yalc
+/.idea
 yalc.lock
 yarn-error.log
 .DS_Store

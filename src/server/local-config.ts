@@ -7,7 +7,7 @@ import yaml from "yaml";
 /**
  * @internal
  */
-async function getConfig(): Promise<any> {
+function getConfig(): any {
   // Path to Solana CLI config file
   const CONFIG_FILE_PATH = path.resolve(
     os.homedir(),
@@ -25,9 +25,9 @@ async function getConfig(): Promise<any> {
 /**
  * Load and parse the Solana CLI config file to determine which RPC url to use
  */
-export async function getRpcUrl(): Promise<string> {
+export function getRpcUrl(): string {
   try {
-    const config = await getConfig();
+    const config = getConfig();
     if (!config.json_rpc_url) {
       throw new Error("Missing RPC URL");
     }
@@ -43,13 +43,13 @@ export async function getRpcUrl(): Promise<string> {
 /**
  * Load and parse the Solana CLI config file to determine which payer to use
  */
-export async function getPayer(): Promise<Keypair> {
+export function getPayer(): Keypair {
   try {
-    const config = await getConfig();
+    const config = getConfig();
     if (!config.keypair_path) {
       throw new Error("Missing keypair path");
     }
-    return await createKeypairFromFile(config.keypair_path);
+    return createKeypairFromFile(config.keypair_path);
   } catch (err) {
     console.warn(
       "Failed to create keypair from CLI config file, falling back to new random keypair"
@@ -61,9 +61,7 @@ export async function getPayer(): Promise<Keypair> {
 /**
  * Create a Keypair from a secret key stored in file as bytes' array
  */
-export async function createKeypairFromFile(
-  filePath: string
-): Promise<Keypair> {
+export function createKeypairFromFile(filePath: string): Keypair {
   const secretKeyString = fs.readFileSync(filePath, { encoding: "utf8" });
   const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
   return Keypair.fromSecretKey(secretKey);

@@ -1,11 +1,11 @@
 import { ThirdwebSDK } from "../sdk";
-import { Network } from "../types";
+import { Network } from "../types/index";
 import { getPayer } from "./local-config";
 import { KeypairSigner } from "@metaplex-foundation/js";
 import { Connection } from "@solana/web3.js";
 
-export async function NodeThirdwebSDK(network: Network) {
-  const payer = await getPayer();
+export function createThirdwebSDK(network: Network): ThirdwebSDK {
+  const payer = getPayer();
   const signer: KeypairSigner = {
     publicKey: payer.publicKey,
     secretKey: payer.secretKey,
