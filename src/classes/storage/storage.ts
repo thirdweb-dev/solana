@@ -90,7 +90,7 @@ export function replaceGatewayUrlWithHash(
     object[keys[key]] = toIPFSHash(val, scheme, gatewayUrl);
     if (Array.isArray(val)) {
       object[keys[key]] = val.map((el) => {
-        const isFile = el instanceof File || el instanceof Buffer;
+        const isFile = isFileOrBuffer(el);
         if (typeof el === "object" && !isFile) {
           return replaceGatewayUrlWithHash(el, scheme, gatewayUrl);
         } else {
@@ -98,12 +98,19 @@ export function replaceGatewayUrlWithHash(
         }
       });
     }
-    const isFile = val instanceof File || val instanceof Buffer;
+    const isFile = isFileOrBuffer(val);
     if (typeof val === "object" && !isFile) {
       replaceGatewayUrlWithHash(val, scheme, gatewayUrl);
     }
   }
   return object;
+}
+
+function isFileOrBuffer(val: any): boolean {
+  return (
+    (global.File && val instanceof File) ||
+    (global.Buffer && val instanceof Buffer)
+  );
 }
 
 /**

@@ -5,6 +5,7 @@ import {
   IStorageUpload,
   UploadProgressEvent,
 } from "./IStorageUpload";
+import FormData from "form-data";
 
 /**
  * @internal
@@ -141,7 +142,7 @@ export class PinataUploader implements IStorageUpload {
       // if it is a file, we passthrough the file extensions,
       // if it is a buffer or string, the filename would be fileStartNumber + index
       // if it is a buffer or string with names, the filename would be the name
-      if (file instanceof File) {
+      if (global.File && file instanceof File) {
         let extensions = "";
         if (file.name) {
           const extensionStartIndex = file.name.lastIndexOf(".");
@@ -150,11 +151,16 @@ export class PinataUploader implements IStorageUpload {
           }
         }
         fileName = `${i + fileStartNumber}${extensions}`;
-      } else if (file instanceof Buffer || typeof file === "string") {
+      } else if (
+        (global.Buffer && file instanceof Buffer) ||
+        typeof file === "string"
+      ) {
         fileName = `${i + fileStartNumber}`;
-      } else if (file && file.name && file?.data) {
-        fileData = file?.data;
-        fileName = `${file.name}`;
+      }
+      // FIXME this buffer + name type needs to be handled better with an abstract type / interface
+      else if (file && (file as any).name && (file as any).data) {
+        fileData = (file as any).data;
+        fileName = `${(file as any).name}`;
       } else {
         // default behavior
         fileName = `${i + fileStartNumber}`;

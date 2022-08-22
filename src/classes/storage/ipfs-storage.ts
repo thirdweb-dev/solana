@@ -280,7 +280,10 @@ export class IpfsStorage implements IStorage {
     } else if (object) {
       const values = Object.values(object);
       for (const val of values) {
-        if (val instanceof File || val instanceof Buffer) {
+        if (
+          (global.File && val instanceof File) ||
+          (global.Buffer && val instanceof Buffer)
+        ) {
           files.push(val);
         } else if (typeof val === "object") {
           this.buildFilePropertiesMap(val as JsonObject, files);

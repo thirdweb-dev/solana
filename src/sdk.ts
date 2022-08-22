@@ -4,6 +4,7 @@ import { IpfsStorage } from "./classes/storage/ipfs-storage";
 import { UserWallet } from "./classes/user-wallet";
 import { NFTCollection } from "./contracts/nft-collection";
 import { Network } from "./types";
+import { getUrlForNetwork } from "./utils/urls";
 import {
   isIdentitySigner,
   isKeypairSigner,
@@ -12,13 +13,15 @@ import {
   Signer,
   walletAdapterIdentity,
 } from "@metaplex-foundation/js";
-import { clusterApiUrl, Connection, Keypair } from "@solana/web3.js";
+import { Connection, Keypair } from "@solana/web3.js";
 import invariant from "tiny-invariant";
 
 export class ThirdwebSDK {
-  static fromNetwork(network: Network): ThirdwebSDK {
-    // TODO add localhost support
-    return new ThirdwebSDK(new Connection(clusterApiUrl(network)));
+  static fromNetwork(
+    network: Network,
+    storage: IStorage = new IpfsStorage()
+  ): ThirdwebSDK {
+    return new ThirdwebSDK(new Connection(getUrlForNetwork(network)), storage);
   }
 
   private connection: Connection;
